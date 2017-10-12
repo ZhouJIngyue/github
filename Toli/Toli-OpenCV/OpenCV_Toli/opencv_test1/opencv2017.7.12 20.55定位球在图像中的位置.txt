@@ -1,0 +1,138 @@
+#include <opencv2/highgui/highgui.hpp>  
+#include <opencv2/imgproc/imgproc.hpp>  
+#include <opencv2/core/core.hpp>  
+
+#include "iostream"
+
+using namespace cv;  
+using namespace std;  
+
+
+int main()  
+{  
+	VideoCapture cap(0);  
+	if(!cap.isOpened())  
+	{  
+		return -1;  
+	}  
+	Mat frame;  
+	//Mat edges;  
+	vector<Mat> channels;  //三色通道.
+	Mat deal;
+	Mat deal2;
+	int fre=0;
+	int sum;
+	int ball_col;
+	int ball_row;
+	int channels2 = deal2.channels();
+	int nRows = deal2.rows;
+	int nCols = deal2.cols * channels2;
+
+	bool stop = false;  
+	while(!stop)  
+	{  
+		cap>>frame;  
+		//cvtColor(frame, edges, CV_BGR2GRAY);  
+		//GaussianBlur(edges, edges, Size(7,7), 1.5, 1.5);  
+		//Canny(edges, edges, 0, 30, 3);  
+		//imshow("当前视频",edges);
+		split(frame,channels);
+		//addWeighted( channels.at(2), 1, channels.at(1), -1.5, 0.0,deal);
+		//addWeighted( deal, 1, channels.at(0), 0.5, 0.0,deal);
+		addWeighted( channels.at(2), 1, channels.at(0), -0.9, 0.0,deal);
+		addWeighted( deal, 1, channels.at(1), -0.4, 0.0,deal);
+		threshold(deal,deal2,60,255,THRESH_BINARY);
+
+		if(fre>0)
+		{
+			CV_Assert(deal2.depth() == CV_8U);
+			uchar* p = deal2.data;
+		    channels2 = deal2.channels();
+			nRows = deal2.rows;
+		    nCols = deal2.cols * channels2;
+			int *col_all=new int[deal2.cols];
+			int *row_all=new int[deal2.rows];
+			//col_all,row_all初始化.
+			for(int i=0;i<deal2.cols;i++)
+			{
+				col_all[i]=0;
+			}
+			for(int i=0;i<deal2.rows;i++)
+			{
+				row_all[i]=0;
+			}
+			//col_all,row_all赋值.
+			for(int i = 0; i < nRows; i++)
+			{
+				for (int j = 0; j < nCols; j+=channels2)
+				{
+					col_all[j/channels2]+=p[i*nCols+j];
+					row_all[i]+=p[i*nCols+j];
+				}
+			}
+			//col_all取中值点.
+			sum=0;
+			for(int i=0;i<deal2.cols;i++)
+			{
+				sum+=col_all[i];
+			}
+			sum/=2;
+			for(int i=0;i<deal2.cols;i++)
+			{
+				sum-=col_all[i];
+				if(sum<0)
+				{
+					ball_col=i;
+					break;
+				}
+			}
+			//row_all取中值点.
+			sum=0;
+			for(int i=0;i<deal2.rows;i++)
+			{
+				sum+=row_all[i];
+			}
+			sum/=2;
+			for(int i=0;i<deal2.rows;i++)
+			{
+				sum-=row_all[i];
+				if(sum<0)
+				{
+					ball_row=i;
+					break;
+				}
+			}
+			cout<<"横坐标为："<<ball_col<<"\t纵坐标为："<<ball_row<<endl;
+
+			//for(int i=0;i<deal2.cols;i++)
+			//{
+			//	cout<<all[i]/deal2.rows<<" ";
+			//}
+			//cout<<endl;
+			fre=0;
+		}
+		fre++;
+
+		//在原图中标记.
+		uchar* p = channels.at(0).data;
+		for(int i = 0; i < nRows; i++)
+		{
+			for (int j = 0; j < nCols; j+=channels2)
+			{
+				if(i>ball_row-10&&i<ball_row+10||j/channels2>ball_col-10&&j/channels2<ball_col+10)
+					p[i*nCols+j]=0;
+			}
+		}
+
+		//显示.
+		//imshow("当前视频",frame);  
+		imshow("当前视频b",channels.at(0));  
+		//imshow("当前视频g",channels.at(1));  
+		//imshow("当前视频r",channels.at(2));  
+		//imshow("处理后的",deal); 
+		imshow("阈值化的",deal2); 
+		if(waitKey(30) >=0)  
+			stop = true;  
+	}  
+	return 0;  
+}  
