@@ -1,9 +1,0 @@
-10.0
-7
-1       SQLCHAR             0       12      ","       1     StockCode                  ""
-2       SQLCHAR             0       32      ","       2     StockName                  Chinese_PRC_CI_AS
-3       SQLCHAR             0       32      ","       3     Category                   Chinese_PRC_CI_AS
-4       SQLCHAR             0       30      ","       4     PERatio                    ""
-5       SQLCHAR             0       30      ","       5     PBRatio                    ""
-6       SQLCHAR             0       30      ","       6     MktValue                   ""
-7       SQLCHAR             0       30      "\r\n"    7     Circulation                ""
