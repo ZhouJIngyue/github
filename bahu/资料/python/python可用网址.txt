@@ -1,0 +1,3 @@
+https://docs.python.org/3.6/index.html           python可用网页.
+http://www.cnblogs.com/panzi/p/6421826.html      简单爬虫.
+http://www.cnblogs.com/ZhangShY/p/7292009.html?utm_source=itdadao&utm_medium=referral     抓取百度url.

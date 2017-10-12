@@ -1,0 +1,8 @@
+10.0
+6
+1       SQLCHAR             0       12      ","       1     StockCode                        ""
+2       SQLCHAR             0       24      ","       2     StockDate                        ""
+3       SQLCHAR             0       30      ","       3     ExtendPics                       ""
+4       SQLCHAR             0       30      ","       4     AllotPics                        ""
+5       SQLCHAR             0       30      ","       5     AllotmentPrice                   ""
+6       SQLCHAR             0       30      "\r\n"    6     Bonus                            ""

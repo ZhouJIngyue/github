@@ -1,0 +1,14 @@
+10.0
+12
+1       SQLCHAR             0       12      ","       1     StockCode                  ""
+2       SQLCHAR             0       24      ","       2     StockDate                  ""
+3       SQLCHAR             0       30      ","       3     CurPrice                   ""
+4       SQLCHAR             0       12      ","       4     CurHands                   ""
+5       SQLCHAR             0       30      ","       5     Buy1Price                  ""
+6       SQLCHAR             0       12      ","       6     Buy1Amount                 ""
+7       SQLCHAR             0       30      ","       7     Buy2Price                  ""
+8       SQLCHAR             0       12      ","       8     Buy2Amount                 ""
+9       SQLCHAR             0       30      ","       9     Sell1Price                 ""
+10      SQLCHAR             0       12      ","       10    Sell1Amount                ""
+11      SQLCHAR             0       30      ","       11    Sell2Price                 ""
+12      SQLCHAR             0       12      "\r\n"    12    Sell2Amount                ""
