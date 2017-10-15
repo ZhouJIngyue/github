@@ -18,8 +18,12 @@ class getOnePage(Thread):
 			response = urllib.request.urlopen(request,timeout=10)
 			html = response.read()
 			html = html.decode('utf-8')
-			word = re.findall(u"[\u4E00-\u9FA5]+",html)
-			print(word)
+			# word = re.findall(u"[\u4E00-\u9FA5]+",html)
+			words = re.findall(u"[\u2E80-\u9FFF]+",html)
+			f = open('text\\'+file,'a')
+			for word in words:
+				f.write(word)
+			f.close()
 		except:
 			pass
 
@@ -27,11 +31,13 @@ if __name__ == '__main__':
 	path = os.getcwd()
 	files = os.listdir(path+'\\url')
 	for file in files:
+		print(file)
+		if os.path.exists('text\\'+file):
+				continue
 		if os.path.isfile('url\\'+file):
 			with open('url\\'+file,'r',encoding = 'utf-8') as kf:
 				threads = []
 				for line in kf:
-					print(line)
 					t=getOnePage(line)
 					t.start()
 					threads.append(t)
