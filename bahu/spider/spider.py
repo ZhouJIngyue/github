@@ -15,14 +15,14 @@ class getOnePage(Thread):
     def run(self):
 	    try:
 	        request = urllib.request.Request(self.name)
-	        response = urllib.request.urlopen(request,timeout=60)
+	        response = urllib.request.urlopen(request,timeout=150)
 	        soup = BeautifulSoup(response.read(),"html.parser")
 	        urls = soup.find_all(name='a',attrs={'href':re.compile(('.'))})
 	        #抓取百度搜索结果中的a标签，其中href是包含了百度的跳转地址
 	        for i in urls:
 	            if 'www.baidu.com/link?url=' in i['href']:
 	                request = urllib.request.Request(i['href'])
-	                a = urllib.request.urlopen(request,timeout=20)
+	                a = urllib.request.urlopen(request,timeout=15)
 	                #对跳转地址进行一次访问，返回访问的url就能得到我们需要抓取的url结果了
 	                #if a.status_code == 200:
 	                #print a.url
