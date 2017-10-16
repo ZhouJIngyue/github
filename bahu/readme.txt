@@ -66,4 +66,6 @@ bahu (Baidu Hundred 百度百页)
 
 spider 爬虫 文件夹下为从百度爬取关键词相关的url的程序.
 getText 获取文档 文件夹下为从指定url获取所有文档的程序.
-compass 压缩 文件夹下为将一个文档压缩为字连接表的程序.
+compress 压缩 文件夹下为将一个文档压缩为字连接表的程序.
+  compress0.3 没有考虑单元，单纯的移动窗口.
+  compress0.5 考虑单元的压缩.
