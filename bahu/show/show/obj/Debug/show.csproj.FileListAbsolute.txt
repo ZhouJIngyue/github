@@ -1,0 +1,9 @@
+C:\Users\ZhouJY\Desktop\github\bahu\show\show\bin\Debug\show.exe.config
+C:\Users\ZhouJY\Desktop\github\bahu\show\show\bin\Debug\show.exe
+C:\Users\ZhouJY\Desktop\github\bahu\show\show\bin\Debug\show.pdb
+C:\Users\ZhouJY\Desktop\github\bahu\show\show\obj\Debug\show.csprojResolveAssemblyReference.cache
+C:\Users\ZhouJY\Desktop\github\bahu\show\show\obj\Debug\show.Form1.resources
+C:\Users\ZhouJY\Desktop\github\bahu\show\show\obj\Debug\show.Properties.Resources.resources
+C:\Users\ZhouJY\Desktop\github\bahu\show\show\obj\Debug\show.csproj.GenerateResource.Cache
+C:\Users\ZhouJY\Desktop\github\bahu\show\show\obj\Debug\show.exe
+C:\Users\ZhouJY\Desktop\github\bahu\show\show\obj\Debug\show.pdb
