@@ -6,8 +6,8 @@
 #include "vector"
 using namespace std;
 
-#define WORD_CONNECT_SIZE 100       //字连接表大小
-#define WORD_MOVE_SIZE 20           //文字移动队列大小
+#define WORD_CONNECT_SIZE 600       //字连接表大小
+#define WORD_MOVE_SIZE 30           //文字移动队列大小
 
 double wordConnect[WORD_CONNECT_SIZE][WORD_CONNECT_SIZE]={0};     //字连接表.
 int wordMove[WORD_MOVE_SIZE]={0};    //文字移动队列.
