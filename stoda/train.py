@@ -118,17 +118,17 @@ for i in range(10000000):
 		print('------------------------------------------------------------------------')
 	#3.反向传播
 	#计算输出结果的梯度
-	dScores=probs
-	dScores[range(N),Y]-=1      #???????????????
+	dScores=probs             #损失correctLogprobs对隐藏层输出的导数，详细推导见http://www.jianshu.com/p/ffa51250ba2e
+	dScores[range(N),Y]-=1    #以及http://cs231n.github.io/neural-networks-case-study/#grad
 	dScores/=N
 	#将梯度反向传播给参数
 	#先传播给W2，b2
-	dW2=np.dot(hiddenLayer.T,dScores)          #??????????????大致了解是求偏导，不知详细解释
-	db2=np.sum(dScores,axis=0,keepdims=True)   #??????????????
+	dW2=np.dot(hiddenLayer.T,dScores)          #通过链式法则反向传播
+	db2=np.sum(dScores,axis=0,keepdims=True)   #详见http://cs231n.github.io/neural-networks-case-study/#grad
 	#再传播给隐藏层
-	dHidden=np.dot(dScores,W2.T)               #??????????????
+	dHidden=np.dot(dScores,W2.T)               #为了求损失correctLogprobs对参数W的导数，继续反向传播
 	#通过ReLU函数
-	dHidden[hiddenLayer<=0]=0                  #值小于0的，梯度无效
+	dHidden[hiddenLayer<=0]=0                  #详见http://cs231n.github.io/neural-networks-case-study/#net
 	#最后到W，b
 	dW=np.dot(X.T,dHidden)
 	db=np.sum(dHidden,axis=0,keepdims=True)
