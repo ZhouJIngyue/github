@@ -2,8 +2,8 @@ import csv
 import numpy as np
 import random as rd
 
-pastDay=100                #每则数据包含过去多少天，等同于几维
-nextDay=20                 #每则数据结果包含未来几天，等同于最后的建议持股时长
+pastDay=5                  #每则数据包含过去多少天，等同于几维
+nextDay=5                  #每则数据结果包含未来几天，等同于最后的建议持股时长
 #读入训练数据表
 allData=[]
 with open('E:\\data\\stoda\\train\\train.csv',newline='') as f:
@@ -14,7 +14,7 @@ with open('E:\\data\\stoda\\train\\train.csv',newline='') as f:
 N=100        #单次输入数据行数
 D=pastDay    #输入维数
 K=5          #输出维数
-h=1000       #隐藏层节点个数
+h=20         #隐藏层节点个数
 W=0.01*np.random.randn(D,h)   #隐藏层输入权重
 b=np.zeros((1,h))             #隐藏层输入偏置
 W2=0.01*np.random.randn(h,K)  #隐藏层输出权重
@@ -37,7 +37,7 @@ def getData():
 		return oneData
 
 #训练，详见http://cs231n.github.io/neural-networks-case-study/
-for i in range(10000):
+for i in range(10000000):
 	#1.获取训练数据
 	trainData=[]
 	for j in range(N):
@@ -64,6 +64,30 @@ for i in range(10000):
 			Y[j]=1
 			continue
 		Y[j]=0
+	#------------------------------------------------------------------
+	#伪造数据，验证网络的基本分类能力
+	# for j in range(N):
+	# 	a=rd.random()
+	# 	for k in range(pastDay):
+	# 		if(a<0.2):
+	# 			X[j][k]=rd.uniform(0.3,0.5)
+	# 			Y[j]=0
+	# 			continue
+	# 		if(a<0.4):
+	# 			X[j][k]=rd.uniform(0.5,0.9)
+	# 			Y[j]=1
+	# 			continue
+	# 		if(a<0.6):
+	# 			X[j][k]=rd.uniform(0.9,1.1)
+	# 			Y[j]=2
+	# 			continue
+	# 		if(a<0.8):
+	# 			X[j][k]=rd.uniform(1.1,1.3)
+	# 			Y[j]=3
+	# 			continue
+	# 		X[j][k]=rd.uniform(1.3,1.7)
+	# 		Y[j]=4
+	#------------------------------------------------------------------
 	#2.前向传播
 	#激活函数为ReLU，详见http://cs231n.github.io/neural-networks-1/#actfun
 	hiddenLayer=np.maximum(0,np.dot(X,W)+b)   #计算隐藏层输入
@@ -76,17 +100,43 @@ for i in range(10000):
 	correctLogprobs=-np.log(probs[range(N),Y])  #计算预测分布与真实分布的交叉熵，交叉熵定义详见http://colah.github.io/posts/2015-09-Visual-Information/
 	dataLoss=np.sum(correctLogprobs)/N          #N个样本预测分布与真实分布的平均交叉熵
 	regLoss=0.5*reg*np.sum(W*W)+0.5*reg*np.sum(W2*W2)    #规范化损失，使权重偏好小值，有消除权重取值模糊性，提高泛化性等好处，详见http://cs231n.github.io/linear-classify/#svm
-
-
-
-
-
-# data=data[1:]                 #去掉表头
-# data=[d[12] for d in data]    #读取后复权价列
-# data=[float(d) for d in data]                  #转浮点型
-# for day in range(pastDay,len(data)-nextDay):
-# 	#oneTrain=[d/data[day] for d in data[day-pastDay:day]]   #前pastDay天涨跌幅作为输入
-# 	oneTrain=[data[i]/data[i+1] for i in range(day-pastDay,day-1)]   #前pastDay天涨跌幅作为输入
-# 	oneTrain.append(data[day+nextDay]/data[day])     #后nextDay天涨跌幅作为输出
-# 	train.append(oneTrain)
-# print(train)
+	loss=dataLoss+regLoss                       #总损失为交叉熵与规范化损失两者之和
+	#结果展示
+	if(i%1000==0):
+		#输出损失
+		print('迭代了%d次：损失为%f'%(i,loss))
+		#输出分类准确率
+		result=np.argmax(probs,axis=1)
+		sameCount=0
+		for j in range(N):
+			if(result[j]==Y[j]):
+				sameCount+=1
+		print('准确率为%f'%(sameCount/N))
+		#输出预测分布与实际分布
+		together=np.vstack((result,Y))
+		print(together)
+		print('------------------------------------------------------------------------')
+	#3.反向传播
+	#计算输出结果的梯度
+	dScores=probs
+	dScores[range(N),Y]-=1      #???????????????
+	dScores/=N
+	#将梯度反向传播给参数
+	#先传播给W2，b2
+	dW2=np.dot(hiddenLayer.T,dScores)          #??????????????大致了解是求偏导，不知详细解释
+	db2=np.sum(dScores,axis=0,keepdims=True)   #??????????????
+	#再传播给隐藏层
+	dHidden=np.dot(dScores,W2.T)               #??????????????
+	#通过ReLU函数
+	dHidden[hiddenLayer<=0]=0                  #值小于0的，梯度无效
+	#最后到W，b
+	dW=np.dot(X.T,dHidden)
+	db=np.sum(dHidden,axis=0,keepdims=True)
+	#加上规范化损失的梯度
+	dW2+=reg*W2         #0.5*reg*np.sum(W2*W2)对W2求导
+	dW+=reg*W
+	#进行梯度更新
+	W+=-stepSize*dW
+	b+=-stepSize*db
+	W2+=-stepSize*dW2
+	b2+=-stepSize*db2
