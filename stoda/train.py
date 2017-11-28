@@ -2,7 +2,7 @@ import csv
 import numpy as np
 import random as rd
 
-pastDay=5                  #每则数据包含过去多少天，等同于几维
+pastDay=20                 #每则数据包含过去多少天，等同于几维
 nextDay=5                  #每则数据结果包含未来几天，等同于最后的建议持股时长
 #读入训练数据表
 allData=[]
@@ -11,16 +11,16 @@ with open('E:\\data\\stoda\\train\\train.csv',newline='') as f:
 	for row in reader:
 		allData.append(row)
 #构建网络
-N=100        #单次输入数据行数
+N=20000       #单次输入数据行数
 D=pastDay    #输入维数
 K=5          #输出维数
-h=20         #隐藏层节点个数
+h=1000        #隐藏层节点个数
 W=0.01*np.random.randn(D,h)   #隐藏层输入权重
 b=np.zeros((1,h))             #隐藏层输入偏置
 W2=0.01*np.random.randn(h,K)  #隐藏层输出权重
 b2=np.zeros((1,K))            #隐藏层输出偏置
 stepSize=1e-0      #梯度下降步长
-reg=1e-3           #权重矩阵控制系数，防过拟合
+reg=1e-5           #权重矩阵控制系数，防过拟合
 
 #截取数据
 def getData():
@@ -102,7 +102,7 @@ for i in range(10000000):
 	regLoss=0.5*reg*np.sum(W*W)+0.5*reg*np.sum(W2*W2)    #规范化损失，使权重偏好小值，有消除权重取值模糊性，提高泛化性等好处，详见http://cs231n.github.io/linear-classify/#svm
 	loss=dataLoss+regLoss                       #总损失为交叉熵与规范化损失两者之和
 	#结果展示
-	if(i%1000==0):
+	if(i%100==0):
 		#输出损失
 		print('迭代了%d次：损失为%f'%(i,loss))
 		#输出分类准确率
